@@ -1,0 +1,47 @@
+# Byte-compiled files
+*.py[cod]
+__pycache__/
+*.so
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+
+# Distribution / Packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Logs and debugging
+*.log
+*.out
+*.err
+*.gz
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# pytest
+.cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+kumo/
