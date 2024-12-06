@@ -1,1 +1,1 @@
-from .cache import docache
+from .cache import cache_response

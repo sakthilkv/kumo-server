@@ -1,17 +1,19 @@
-from datetime import datetime, date, timedelta
 from functools import wraps
-from flask import Response
+from flask import after_this_request
 
-def docache(minutes=5, content_type='application/json; charset=utf-8'):
-    """ Flask decorator that allow to set Expire and Cache headers. """
-    def fwrap(f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            r = f(*args, **kwargs)
-            then = datetime.now() + timedelta(minutes=minutes)
-            rsp = Response(r, content_type=content_type)
-            rsp.headers.add('Expires', then.strftime("%a, %d %b %Y %H:%M:%S GMT"))
-            rsp.headers.add('Cache-Control', 'public,max-age=%d' % int(60 * minutes))
-            return rsp
-        return wrapped_f
-    return fwrap
+def cache_response(max_age=3600, s_maxage=3600):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            @after_this_request
+            def set_cache_header(response):
+                response.cache_control.public = True
+                response.cache_control.max_age = max_age
+                response.cache_control.s_maxage = s_maxage
+                return response
+            
+            # Call the original function to generate the response
+            response = func(*args, **kwargs)
+            return response
+        return wrapper
+    return decorator

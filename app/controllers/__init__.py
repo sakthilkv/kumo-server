@@ -1,1 +1,2 @@
 from .user_controller import UserController
+from .movie_controller import MovieController

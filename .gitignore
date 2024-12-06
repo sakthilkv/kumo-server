@@ -47,4 +47,6 @@ Thumbs.db
 kumo/
 scrape.py
 activate.bat
+server.bat
 dbconn.py
+schema.json

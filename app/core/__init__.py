@@ -1,0 +1,1 @@
+from .tmbd_handler import TMDbAPIHandler
