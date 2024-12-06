@@ -45,3 +45,4 @@ Thumbs.db
 .dmypy.json
 
 kumo/
+scrape.py
