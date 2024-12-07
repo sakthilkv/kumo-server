@@ -13,9 +13,11 @@ class UserController:
         else:
             user.set_password(password)
             try:
+               db.session.add(user)
                db.session.commit()
-            except:
-                return jsonify({}), 500
+            except Exception as e:
+                print(e)
+                return jsonify({"message": "Username is taken"}), 500
         return jsonify({"message": "User created successfully"}), 201
 
         # user.set_password(password)
@@ -25,3 +27,4 @@ class UserController:
         # except:
         #     return jsonify({}), 500
         # return jsonify({"message": "User created successfully"}), 201
+

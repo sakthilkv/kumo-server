@@ -1,13 +1,14 @@
 import json
+
+from flask import jsonify
 from app.core import TMDbAPIHandler as TMDB
 
 class MovieController:
     handler = TMDB()
     @staticmethod
     def get_min_movie_info(id):
-        data = MovieController.handler.request(f"find/{id}?external_source=imdb_id").get("movie_results",None)
+        data = MovieController.handler.request(f"movie/{id}")
         if data:
-            data = data[0]
             response = {
                 "id": data["id"],
                 "media_type": "movie",
@@ -15,11 +16,11 @@ class MovieController:
                 "poster_url": data["poster_path"],
                 "year": data["release_date"].split('-')[0]
             }
-            return response
+            return jsonify(response), 200
 
         return  {}
     def get_movie_info(id):
-        data = MovieController.handler.request(f"find/{id}?external_source=imdb_id").get("movie_results",None)
+        data = MovieController.handler.request(f"movie/{id}").get("movie_results",None)
         if data:
             data = data[0]
             response = {
