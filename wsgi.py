@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory
+from flask import Blueprint, Flask, send_from_directory
 import logging
 from sqlalchemy import text
 from flask_cors import CORS
@@ -14,9 +14,11 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 def register_extensions(app):
     with app.app_context():
         db.init_app(app)
-    CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "http://192.168.0.104:5173"]}})
-    app.register_blueprint(user_blueprint,url_prefix = "/user")
-    app.register_blueprint(media_blueprint,url_prefix = "/media")
+    CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "http://localhost:8000","http://192.168.0.104:5173"]}})
+    api_blueprint = Blueprint('parent','api', __name__)
+    api_blueprint.register_blueprint(user_blueprint,url_prefix = "/user")
+    api_blueprint.register_blueprint(media_blueprint,url_prefix = "/media")
+    app.register_blueprint(api_blueprint,url_prefix = "/api")
 
 def create_app(config):
     app = Flask(__name__)

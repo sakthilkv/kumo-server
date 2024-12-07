@@ -18,7 +18,7 @@ class TMDbAPIHandler:
         if response.status_code == 200:
             return response.json()
         else:
-            None
+            return {}
     
 # handler = TMDbAPIHandler()
 # url = "https://api.themoviedb.org/3/movie/324857"
