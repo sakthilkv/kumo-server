@@ -10,7 +10,7 @@ class SeriesController:
             response = {
                 "id": data["id"],
                 "media_type": "tvseries",
-                "title": data["title"],
+                "title": data["name"],
                 "poster_url": data["poster_path"],
                 "year": data["first_air_date"].split('-')[0]
             }
@@ -20,18 +20,19 @@ class SeriesController:
     def get_series_info(id):
         data = SeriesController.handler.request(f"tv/{id}")
         if data:
-            response = {
-                "cbfc": "A" if data["adult"] else "U",
-                "genre": [str(genre["id"]) for genre in data["genres"]],
-                "id": str(data["id"]),
-                "media_type": "movie",
-                "runtime":data["last_episode_to_air"]["runtime"] if data["last_episode_to_air"]["runtime"] else "0",
-                "title": data["name"],
-                "plot": data["overview"],
-                "poster_url": data["poster_path"],
-                "release_date": data["first_air_date"]
-            }
-            return response
+            if  not ("16" in [str(genre["id"]) for genre in data["genres"]] and any(country in ["JP", "CN", "KR"] for country in data["origin_country"])):
+                response = {
+                    "cbfc": "A" if data["adult"] else "U",
+                    "genre": [str(genre["id"]) for genre in data["genres"]],
+                    "id": str(data["id"]),
+                    "media_type": "movie",
+                    "runtime":data["last_episode_to_air"]["runtime"] if data["last_episode_to_air"]["runtime"] else "0",
+                    "title": data["name"],
+                    "plot": data["overview"],
+                    "poster_url": data["poster_path"],
+                    "release_date": data["first_air_date"]
+                }
+                return response
 
         return  {}
     
