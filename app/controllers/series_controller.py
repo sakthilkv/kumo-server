@@ -4,31 +4,32 @@ from app.core import TMDbAPIHandler as TMDB
 class SeriesController:
     handler = TMDB()
     @staticmethod
-    def get_min_movie_info(id):
-        data = SeriesController.handler.request(f"find/{id}?external_source=imdb_id").get("movie_results",None)
+    def get_min_series_info(id):
+        data = SeriesController.handler.request(f"tv/{id}")
         if data:
-            data = data[0]
             response = {
                 "id": data["id"],
-                "media_type": "series",
+                "media_type": "tvseries",
                 "title": data["title"],
                 "poster_url": data["poster_path"],
-                "year": data["release_date"].split('-')[0]
+                "year": data["first_air_date"].split('-')[0]
             }
             return response
 
         return  {}
-    def get_movie_info(id):
-        data = SeriesController.handler.request(f"find/{id}?external_source=imdb_id").get("movie_results",None)
+    def get_series_info(id):
+        data = SeriesController.handler.request(f"tv/{id}")
         if data:
-            data = data[0]
             response = {
-                "id": data["id"],
-                "media_type": "series",
-                "title": data["title"],
+                "cbfc": "A" if data["adult"] else "U",
+                "genre": [str(genre["id"]) for genre in data["genres"]],
+                "id": str(data["id"]),
+                "media_type": "movie",
+                "runtime":data["last_episode_to_air"]["runtime"] if data["last_episode_to_air"]["runtime"] else "0",
+                "title": data["name"],
                 "plot": data["overview"],
                 "poster_url": data["poster_path"],
-                "release_date": data["release_date"]
+                "release_date": data["first_air_date"]
             }
             return response
 

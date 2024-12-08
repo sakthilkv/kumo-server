@@ -24,6 +24,15 @@ def search_movie():
 
 
 # SERIES ROUTES
+@media_blueprint.route('/min/tvseries/<string:movie_id>')
+@cache_response()
+def get_min_series_info(movie_id):
+    return SeriesController.get_min_series_info(movie_id)
+
+@media_blueprint.route('/tvseries/<string:movie_id>')
+@cache_response()
+def get_series_info(movie_id):
+    return SeriesController.get_series_info(movie_id)
 
 @media_blueprint.route('/tvseries/search')
 def search_series():
@@ -38,11 +47,6 @@ def search_anime():
     query = request.args.get("q")
     return AnimeController.search_anime(query)
 
-
-
-@media_blueprint.route('/tvseries/<int:tvseries_id>')
-def get_tvseries_info(tvseries_id):
-    pass
 
 @media_blueprint.route('/anime/<int:anime_id>')
 def get_anime_info(anime_id):

@@ -19,13 +19,18 @@ class MovieController:
             return jsonify(response), 200
 
         return  {}
+    
     def get_movie_info(id):
-        data = MovieController.handler.request(f"movie/{id}").get("movie_results",None)
+        data = MovieController.handler.request(f"movie/{id}")
         if data:
-            data = data[0]
+            data = data
             response = {
-                "id": data["id"],
+                "cbfc": "A" if data["adult"] else "U",
+                "genre": [str(genre["id"]) for genre in data["genres"]],
+                "id": str(data["id"]),
+                "imdb_id":data["imdb_id"],
                 "media_type": "movie",
+                "runtime":data["runtime"] if data["runtime"] else "0",
                 "title": data["title"],
                 "plot": data["overview"],
                 "poster_url": data["poster_path"],

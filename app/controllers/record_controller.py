@@ -1,3 +1,4 @@
+import logging
 from flask import jsonify
 from extension import db
 from app.models import Record
@@ -11,6 +12,7 @@ class RecordController:
     @staticmethod
     def get_dashboard(uid,media_type):
         records = db.session.query(Record).filter_by(uid=uid,media_type=media_type).all()
+        print("Found: ", len(records))
         response = {"results":[]}
         if records:
             for record in records:
@@ -22,6 +24,6 @@ class RecordController:
                     "status": record.status,
                     "progress": record.progress if record.progress else None,
                 })
-        return jsonify(response), 200
+        return jsonify(response), 200   
         
 
