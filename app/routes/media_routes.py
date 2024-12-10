@@ -7,15 +7,15 @@ media_blueprint = Blueprint('child','media', __name__)
 
 # MOVIE ROUTES
 
-@media_blueprint.route('/min/movie/<string:movie_id>')
+@media_blueprint.route('/min/movie/<int:movie_id>')
 @cache_response()
 def get_min_movie_info(movie_id):
     return MovieController.get_min_movie_info(movie_id)
 
-@media_blueprint.route('/movie/<string:movie_id>')
-@cache_response()
+@media_blueprint.route('/movie/<int:movie_id>')
 def get_movie_info(movie_id):
-    return MovieController.get_movie_info(movie_id)
+    uid = request.headers.get('uid')
+    return MovieController.get_movie_info(movie_id,uid)
 
 @media_blueprint.route('/movie/search')
 def search_movie():
@@ -24,15 +24,15 @@ def search_movie():
 
 
 # SERIES ROUTES
-@media_blueprint.route('/min/tvseries/<string:movie_id>')
+@media_blueprint.route('/min/tvseries/<int:movie_id>')
 @cache_response()
 def get_min_series_info(movie_id):
     return SeriesController.get_min_series_info(movie_id)
 
-@media_blueprint.route('/tvseries/<string:movie_id>')
-@cache_response()
+@media_blueprint.route('/tvseries/<int:movie_id>')
 def get_series_info(movie_id):
-    return SeriesController.get_series_info(movie_id)
+    uid = request.headers.get('uid')
+    return SeriesController.get_series_info(movie_id,uid)
 
 @media_blueprint.route('/tvseries/search')
 def search_series():
@@ -47,10 +47,17 @@ def search_anime():
     query = request.args.get("q")
     return AnimeController.search_anime(query)
 
+@media_blueprint.route('/min/anime/<int:movie_id>')
+@cache_response()
+def get_min_anime_info(movie_id):
+    return AnimeController.get_min_anime_info(movie_id)
 
-@media_blueprint.route('/anime/<int:anime_id>')
-def get_anime_info(anime_id):
-    pass
+@media_blueprint.route('/anime/<int:movie_id>')
+def get_anime_info(movie_id):
+    uid = request.headers.get('uid')
+    return AnimeController.get_anime_info(movie_id,uid)
+
+#Manga Routes
 
 @media_blueprint.route('/manga/<int:manga_id>')
 def get_manga_info(manga_id):

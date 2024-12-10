@@ -1,5 +1,8 @@
 import json
+
+from flask import jsonify
 from app.core import TMDbAPIHandler as TMDB
+from app.models.record_model import Record
 
 class SeriesController:
     handler = TMDB()
@@ -17,24 +20,33 @@ class SeriesController:
             return response
 
         return  {}
-    def get_series_info(id):
+    def get_series_info(id,uid):
         data = SeriesController.handler.request(f"tv/{id}")
         if data:
-            if  not ("16" in [str(genre["id"]) for genre in data["genres"]] and any(country in ["JP", "CN", "KR"] for country in data["origin_country"])):
+            status = Record.check_media_status(uid=uid,media_type="tvseries",media_id=id)
+            if not status:
+                status = "none"
+            else:
+                status = str(status.status)
+            if  not  ("16" in [str(genre["id"]) for genre in data["genres"]] and any(country in ["JP", "CN", "KR"] for country in data["origin_country"])):
                 response = {
                     "cbfc": "A" if data["adult"] else "U",
                     "genre": [str(genre["id"]) for genre in data["genres"]],
                     "id": str(data["id"]),
-                    "media_type": "movie",
+                    "media_type": "tvseries",
                     "runtime":data["last_episode_to_air"]["runtime"] if data["last_episode_to_air"]["runtime"] else "0",
                     "title": data["name"],
                     "plot": data["overview"],
                     "poster_url": data["poster_path"],
-                    "release_date": data["first_air_date"]
-                }
+                    "release_date": data["first_air_date"],
+                    "status": Record.check_media_status(uid,"anime",id),
+                    "status": str(status)
+               }
                 return response
-
-        return  {}
+            else:
+                return jsonify({"message": "sorry :("}), 400
+        else:
+            return jsonify({"message": "sorry"}), 400
     
     def search_series(keyword):
         data = SeriesController.handler.request(f"search/tv?query={keyword}&include_adult=true").get("results",None)

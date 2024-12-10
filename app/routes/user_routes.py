@@ -17,3 +17,12 @@ def dashboard():
     uid = request.headers.get('uid')
     media_type = request.args.get('media_type')
     return RecordController.get_dashboard(uid,media_type)
+
+@user_blueprint.route("/add_media",methods = ["GET"])
+def add_media():
+    uid = request.headers.get('uid')
+    media_type = request.args.get('media_type')
+    media_id = request.args.get('media_id')
+    status = request.args.get('status')
+
+    return RecordController.add_media(uid,media_type,media_id,status)

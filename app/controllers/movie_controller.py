@@ -2,6 +2,7 @@ import json
 
 from flask import jsonify
 from app.core import TMDbAPIHandler as TMDB
+from app.models.record_model import Record
 
 class MovieController:
     handler = TMDB()
@@ -20,10 +21,15 @@ class MovieController:
 
         return  {}
     
-    def get_movie_info(id):
+    def get_movie_info(id,uid):
         data = MovieController.handler.request(f"movie/{id}")
         if data:
             data = data
+            status = Record.check_media_status(uid=uid,media_type="movie",media_id=id)
+            if not status:
+                status = "none"
+            else:
+                status = str(status.status)
             response = {
                 "cbfc": "A" if data["adult"] else "U",
                 "genre": [str(genre["id"]) for genre in data["genres"]],
@@ -34,7 +40,8 @@ class MovieController:
                 "title": data["title"],
                 "plot": data["overview"],
                 "poster_url": data["poster_path"],
-                "release_date": data["release_date"]
+                "release_date": data["release_date"],
+                "status": str(status)
             }
             return response
 

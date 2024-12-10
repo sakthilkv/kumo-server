@@ -4,7 +4,6 @@ from sqlalchemy.dialects.postgresql import UUID
 from extension import db
 import uuid
 
-
 class Record(db.Model):
     __tablename__ = 'Record'
 
@@ -20,3 +19,9 @@ class Record(db.Model):
 
     def __repr__(self):
         return f"<Record(record_id={self.record_id}, uid={self.uid}, media_id={self.media_id}, media_type={self.media_type}, status={self.status}, progress={self.progress})>"
+    
+    @classmethod
+    def check_media_status(cls, uid,media_type,media_id):
+        return db.session.query(Record).filter_by(uid=uid,media_type=media_type,media_id=str(media_id)).first()
+    
+    
