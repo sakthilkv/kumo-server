@@ -10,8 +10,11 @@ class RecordController:
         pass
     
     @staticmethod
-    def get_dashboard(uid,media_type):
-        records = db.session.query(Record).filter_by(uid=uid,media_type=media_type).all()
+    def get_dashboard(uid,media_type,status):
+        if status == "all":
+            records = db.session.query(Record).filter_by(uid=uid,media_type=media_type).all()
+        else:
+            records = db.session.query(Record).filter_by(uid=uid,media_type=media_type,status=status).all()
         print("Found: ", len(records))
         response = {"results":[]}
         if records:

@@ -50,3 +50,4 @@ activate.bat
 server.bat
 dbconn.py
 schema.json
+prod.bat

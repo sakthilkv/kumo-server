@@ -33,7 +33,7 @@ class AnimeController:
                     "genre": [str(genre["id"]) for genre in data["genres"]],
                     "id": str(data["id"]),
                     "media_type": "anime",
-                    "runtime":data["last_episode_to_air"]["runtime"] if data["last_episode_to_air"]["runtime"] else "0",
+                    "runtime": data["last_episode_to_air"]["runtime"] if data("last_episode_to_air",None) else "0",
                     "title": data["name"],
                     "plot": data["overview"],
                     "poster_url": data["poster_path"],
